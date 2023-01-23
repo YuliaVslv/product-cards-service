@@ -1,6 +1,8 @@
 package com.yuliavslv.shop.backend.controller;
 
+import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
+import com.yuliavslv.shop.backend.repo.ProductRepo;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +13,19 @@ import java.util.List;
 public class ProductTypeController {
 
     ProductTypeRepo productTypeRepo;
+    ProductRepo productRepo;
 
-    public ProductTypeController(ProductTypeRepo productTypeRepo) {
+    public ProductTypeController(ProductTypeRepo productTypeRepo, ProductRepo productRepo) {
+        this.productRepo = productRepo;
         this.productTypeRepo = productTypeRepo;
     }
 
     @GetMapping
+    public List<Product> getProductsInCategory(@RequestParam Integer id) {
+        return productRepo.findByType_Id(id);
+    }
+
+    @GetMapping("/all")
     public List<ProductType> getAllCategories() {
         return productTypeRepo.findAll();
     }
