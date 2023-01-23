@@ -17,6 +17,10 @@ public class ProductType {
     public ProductType() {
     }
 
+    public ProductType(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

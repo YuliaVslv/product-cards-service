@@ -31,7 +31,19 @@ public class Product {
     @Column(name = "amount")
     private Integer amount;
 
-    public Product() {
+    public Product(
+            Brand brand,
+            String name,
+            ProductType type,
+            Double price,
+            Integer sale,
+            Integer amount) {
+        this.brand = brand;
+        this.name = name;
+        this.type = type;
+        this.price = price;
+        this.sale = sale;
+        this.amount = amount;
     }
 
     public Integer getId() {

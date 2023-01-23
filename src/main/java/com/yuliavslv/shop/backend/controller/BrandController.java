@@ -23,4 +23,10 @@ public class BrandController {
     public List<Brand> getAllBrands() {
         return brandRepo.findAll();
     }
+
+    @PostMapping("/add_brand")
+    public Integer addBrand(String name) {
+        Brand result = brandRepo.save(new Brand(name));
+        return result.getId();
+    }
 }
