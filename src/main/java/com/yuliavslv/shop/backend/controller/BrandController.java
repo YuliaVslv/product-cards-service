@@ -2,10 +2,7 @@ package com.yuliavslv.shop.backend.controller;
 
 import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.repo.BrandRepo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,7 +10,7 @@ import java.util.List;
 @RequestMapping("/brands")
 public class BrandController {
 
-    private BrandRepo brandRepo;
+    private final BrandRepo brandRepo;
 
     public BrandController(BrandRepo brandRepo) {
         this.brandRepo = brandRepo;
@@ -25,8 +22,8 @@ public class BrandController {
     }
 
     @PostMapping("/add_brand")
-    public Integer addBrand(String name) {
-        Brand result = brandRepo.save(new Brand(name));
+    public Integer addBrand(@RequestBody Brand brand) {
+        Brand result = brandRepo.save(brand);
         return result.getId();
     }
 }

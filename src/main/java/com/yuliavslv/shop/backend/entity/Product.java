@@ -11,14 +11,14 @@ public class Product {
     @SequenceGenerator(name = "prodSeq", sequenceName = "prod_seq", allocationSize = 1)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id")
     private ProductType type;
 
@@ -30,6 +30,10 @@ public class Product {
 
     @Column(name = "amount")
     private Integer amount;
+
+    public Product() {
+
+    }
 
     public Product(
             Brand brand,

@@ -2,10 +2,7 @@ package com.yuliavslv.shop.backend.controller;
 
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,9 +21,9 @@ public class ProductTypeController {
         return productTypeRepo.findAll();
     }
 
-    @PostMapping("add_category")
-    public Integer addBrand(String name) {
-        ProductType result = productTypeRepo.save(new ProductType(name));
+    @PostMapping("/add_category")
+    public Integer addBrand(@RequestBody ProductType productType) {
+        ProductType result = productTypeRepo.save(productType);
         return result.getId();
     }
 }
