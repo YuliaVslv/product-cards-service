@@ -50,9 +50,9 @@ public class ProductController {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
-                            HttpStatus.BAD_REQUEST.value(),
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
                             "The brand or type of product with the given id was not found"),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }
