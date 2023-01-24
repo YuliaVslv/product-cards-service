@@ -30,6 +30,22 @@ public class ProductController {
     }
 
     @GetMapping
+    public ResponseEntity<?> getProduct(Integer id) {
+        try {
+            Product result = productRepo.findById(id).orElseThrow();
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            "Product with given id does not exist"
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
+    }
+
+    @GetMapping("/all")
     public List<Product> getAllProducts() {
         return productRepo.findAll();
     }
