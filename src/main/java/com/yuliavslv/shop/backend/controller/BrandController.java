@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/brands")
@@ -23,26 +24,27 @@ public class BrandController {
         this.productRepo = productRepo;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getProductsInBrand(@RequestParam Integer id) {
-        if (brandRepo.existsById(id)) {
-            List<Product> result = productRepo.findByBrand_Id(id);
+    @GetMapping("/{brandName}")
+    public ResponseEntity<?> getProductsInBrand(@PathVariable("brandName") String brandName) {
+        try {
+            Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
+            List<Product> result = productRepo.findByBrand_Id(brand.getId());
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Brand with given id does not exist"),
+                            "The specified brand does not exist"),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Brand> getAllBrands() {
         return brandRepo.findAll();
     }
 
-    @PostMapping("/add_brand")
+    @PostMapping
     public ResponseEntity<?> addBrand(@RequestBody Brand brand) {
         Brand result = brandRepo.save(brand);
         return new ResponseEntity<>(result, HttpStatus.CREATED);

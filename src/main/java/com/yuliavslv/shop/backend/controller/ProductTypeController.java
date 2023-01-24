@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/categories")
@@ -23,28 +24,29 @@ public class ProductTypeController {
         this.productTypeRepo = productTypeRepo;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getProductsInCategory(@RequestParam Integer id) {
-        if (productTypeRepo.existsById(id)) {
-            List<Product> result = productRepo.findByType_Id(id);
+    @GetMapping("/{typeName}")
+    public ResponseEntity<?> getProductsInCategory(@PathVariable("typeName") String typeName) {
+        try {
+            ProductType productType = productTypeRepo.findProductTypeByName(typeName).orElseThrow();
+            List<Product> result = productRepo.findByType_Id(productType.getId());
             return new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Category with given id does not exist"
+                            "The specified category does not exist"
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<ProductType> getAllCategories() {
         return productTypeRepo.findAll();
     }
 
-    @PostMapping("/add_category")
+    @PostMapping
     public ResponseEntity<?> addBrand(@RequestBody ProductType productType) {
         ProductType result = productTypeRepo.save(productType);
         return new ResponseEntity<>(result, HttpStatus.CREATED);

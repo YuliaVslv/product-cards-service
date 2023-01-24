@@ -29,8 +29,8 @@ public class ProductController {
         this.productTypeRepo = productTypeRepo;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getProduct(Integer id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable("id") Integer id) {
         try {
             Product result = productRepo.findById(id).orElseThrow();
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -45,12 +45,12 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Product> getAllProducts() {
         return productRepo.findAll();
     }
 
-    @PostMapping("/add_product")
+    @PostMapping
     public ResponseEntity<?> addProduct(@RequestBody ProductDto productDto) {
         try {
             Brand brand = brandRepo.findById(productDto.getBrandId()).orElseThrow();
