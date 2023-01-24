@@ -1,6 +1,9 @@
 package com.yuliavslv.shop.backend.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class IdDto {
+    @NotNull
     private Integer id;
 
     public IdDto() {

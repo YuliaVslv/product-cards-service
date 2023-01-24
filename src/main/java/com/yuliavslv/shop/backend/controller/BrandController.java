@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -47,14 +48,14 @@ public class BrandController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addBrand(@RequestBody Brand brand) {
+    public ResponseEntity<?> addBrand(@RequestBody @Valid Brand brand) {
         Brand result = brandRepo.save(brand);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     //TO DO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping
-    public ResponseEntity<?> deleteBrand(@RequestBody IdDto idDto) {
+    public ResponseEntity<?> deleteBrand(@RequestBody @Valid IdDto idDto) {
         if (brandRepo.existsById(idDto.getId())) {
             try {
                 brandRepo.deleteById(idDto.getId());

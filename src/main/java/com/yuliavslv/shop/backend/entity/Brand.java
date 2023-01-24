@@ -1,6 +1,7 @@
 package com.yuliavslv.shop.backend.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "brand", schema = "shop")
@@ -12,6 +13,7 @@ public class Brand {
     private Integer id;
 
     @Column(name = "name")
+    @NotNull
     private String name;
 
     public Brand() {

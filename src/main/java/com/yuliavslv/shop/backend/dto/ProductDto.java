@@ -1,24 +1,22 @@
 package com.yuliavslv.shop.backend.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class ProductDto {
+    @NotNull
     private Integer brandId;
+    @NotNull
     private String name;
+    @NotNull
     private Integer typeId;
+    @NotNull
     private Double price;
     private Integer sale;
     private Integer amount;
 
     public ProductDto() {
-    }
-
-
-    public ProductDto(Integer brandId, String name, Integer typeId, Double price, Integer sale, Integer amount) {
-        this.brandId = brandId;
-        this.name = name;
-        this.typeId = typeId;
-        this.price = price;
-        this.sale = sale;
-        this.amount = amount;
+        sale = 0;
+        amount = 0;
     }
 
     public Integer getBrandId() {

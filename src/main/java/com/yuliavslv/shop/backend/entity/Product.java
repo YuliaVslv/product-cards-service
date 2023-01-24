@@ -1,6 +1,7 @@
 package com.yuliavslv.shop.backend.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "product", schema = "shop")
@@ -13,22 +14,28 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand_id")
+    @NotNull
     private Brand brand;
 
     @Column(name = "name")
+    @NotNull
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_id")
+    @NotNull
     private ProductType type;
 
     @Column(name = "price")
+    @NotNull
     private Double price;
 
     @Column(name = "sale")
+    @NotNull
     private Integer sale;
 
     @Column(name = "amount")
+    @NotNull
     private Integer amount;
 
     public Product() {

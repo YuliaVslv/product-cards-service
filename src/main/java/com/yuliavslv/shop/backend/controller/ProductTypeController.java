@@ -6,12 +6,12 @@ import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -50,14 +50,14 @@ public class ProductTypeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addBrand(@RequestBody ProductType productType) {
+    public ResponseEntity<?> addBrand(@RequestBody @Valid ProductType productType) {
         ProductType result = productTypeRepo.save(productType);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     //TO DO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping
-    public ResponseEntity<?> deleteProductType(@RequestBody IdDto idDto) {
+    public ResponseEntity<?> deleteProductType(@RequestBody @Valid IdDto idDto) {
         if (productTypeRepo.existsById(idDto.getId())) {
             try {
                 productTypeRepo.deleteById(idDto.getId());

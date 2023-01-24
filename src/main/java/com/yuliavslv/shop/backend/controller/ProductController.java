@@ -9,12 +9,12 @@ import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.BrandRepo;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -53,9 +53,8 @@ public class ProductController {
         return productRepo.findAll();
     }
 
-    //TO DO: handle missing data error
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<?> addProduct(@RequestBody @Valid ProductDto productDto) {
         try {
             Brand brand = brandRepo.findById(productDto.getBrandId()).orElseThrow();
             ProductType type = productTypeRepo.findById(productDto.getTypeId()).orElseThrow();
@@ -78,7 +77,7 @@ public class ProductController {
 
     //TO DO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping
-    public ResponseEntity<?> deleteProduct(@RequestBody IdDto idDto) {
+    public ResponseEntity<?> deleteProduct(@RequestBody @Valid IdDto idDto) {
         if (productRepo.existsById(idDto.getId())) {
             try {
                 productRepo.deleteById(idDto.getId());
