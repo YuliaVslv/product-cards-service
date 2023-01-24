@@ -1,10 +1,13 @@
 package com.yuliavslv.shop.backend.controller;
 
 import com.yuliavslv.shop.backend.dto.AppError;
+import com.yuliavslv.shop.backend.dto.IdDto;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,5 +53,33 @@ public class ProductTypeController {
     public ResponseEntity<?> addBrand(@RequestBody ProductType productType) {
         ProductType result = productTypeRepo.save(productType);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    //TO DO: move processing DataIntegrityViolationException error to a separate method
+    @DeleteMapping
+    public ResponseEntity<?> deleteProductType(@RequestBody IdDto idDto) {
+        if (productTypeRepo.existsById(idDto.getId())) {
+            try {
+                productTypeRepo.deleteById(idDto.getId());
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            } catch (DataIntegrityViolationException e) {
+                String message = e.getCause().getCause().getMessage();
+                return new ResponseEntity<>(
+                        new AppError(
+                                HttpStatus.CONFLICT.value(),
+                                message
+                        ),
+                        HttpStatus.CONFLICT
+                );
+            }
+        } else {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            "Category with given id does not exist"
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
     }
 }
