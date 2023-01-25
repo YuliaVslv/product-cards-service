@@ -3,8 +3,6 @@ package com.yuliavslv.shop.backend.controller;
 import com.yuliavslv.shop.backend.dto.AppError;
 import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
-import com.yuliavslv.shop.backend.repo.BrandRepo;
-import com.yuliavslv.shop.backend.repo.ProductRepo;
 import com.yuliavslv.shop.backend.service.BrandService;
 import com.yuliavslv.shop.backend.service.ProductService;
 import org.springframework.dao.DataIntegrityViolationException;

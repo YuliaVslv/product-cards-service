@@ -2,14 +2,8 @@ package com.yuliavslv.shop.backend.controller;
 
 import com.yuliavslv.shop.backend.dto.AppError;
 import com.yuliavslv.shop.backend.dto.ProductDto;
-import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
-import com.yuliavslv.shop.backend.entity.ProductType;
-import com.yuliavslv.shop.backend.repo.BrandRepo;
-import com.yuliavslv.shop.backend.repo.ProductRepo;
-import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
 import com.yuliavslv.shop.backend.service.ProductService;
-import org.hibernate.dialect.PostgreSQL9Dialect;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
