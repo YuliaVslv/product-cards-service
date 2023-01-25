@@ -35,7 +35,7 @@ public class ProductTypeController {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "The specified category does not exist"
+                            "Category with given name does not exist"
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );

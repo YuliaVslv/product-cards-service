@@ -5,6 +5,8 @@ import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.repo.BrandRepo;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
+import com.yuliavslv.shop.backend.service.BrandService;
+import com.yuliavslv.shop.backend.service.ProductService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,59 +19,45 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/brands")
 public class BrandController {
+    private final BrandService brandService;
+    private final ProductService productService;
 
-    private final BrandRepo brandRepo;
-    private final ProductRepo productRepo;
-
-    public BrandController(BrandRepo brandRepo, ProductRepo productRepo) {
-        this.brandRepo = brandRepo;
-        this.productRepo = productRepo;
+    public BrandController(BrandService brandService, ProductService productService) {
+        this.brandService = brandService;
+        this.productService = productService;
     }
 
     @GetMapping("/{brandName}")
     public ResponseEntity<?> getProductsInBrand(@PathVariable("brandName") String brandName) {
         try {
-            Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
-            List<Product> result = productRepo.findByBrand_Id(brand.getId());
+            List<Product> result = productService.getAllByBrand(brandName);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "The specified brand does not exist"),
+                            "Brand with given name does not exist"),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     @GetMapping
-    public List<Brand> getAllBrands() {
-        return brandRepo.findAll();
+    public List<Brand> getAll() {
+        return brandService.getAll();
     }
 
     @PostMapping
-    public ResponseEntity<?> addBrand(@RequestBody @Valid Brand brand) {
-        Brand result = brandRepo.save(brand);
+    public ResponseEntity<?> add(@RequestBody @Valid Brand brand) {
+        Brand result = brandService.add(brand);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     //TODO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping("/{brandName}")
-    public ResponseEntity<?> deleteBrand(@PathVariable("brandName") String brandName) {
+    public ResponseEntity<?> delete(@PathVariable("brandName") String brandName) {
         try {
-            Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
-            try {
-                brandRepo.delete(brand);
-                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-            } catch (DataIntegrityViolationException e) {
-                String message = e.getCause().getCause().getMessage();
-                return new ResponseEntity<>(
-                        new AppError(
-                                HttpStatus.CONFLICT.value(),
-                                message
-                        ),
-                        HttpStatus.CONFLICT
-                );
-            }
+            brandService.delete(brandName);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
@@ -78,19 +66,23 @@ public class BrandController {
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getCause().getCause().getMessage();
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.CONFLICT.value(),
+                            message
+                    ),
+                    HttpStatus.CONFLICT
+            );
         }
     }
 
     @PutMapping("/{brandName}")
-    public ResponseEntity<?> changeBrand(@PathVariable("brandName") String brandName, @RequestBody Brand changes) {
+    public ResponseEntity<?> change(@PathVariable("brandName") String brandName, @RequestBody Brand changes) {
         try {
-            Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
-            if (changes.getName() != null) {
-                brand.setName(changes.getName());
-                brandRepo.save(brand);
-            }
+            Brand brand = brandService.change(brandName, changes);
             return new ResponseEntity<>(brand, HttpStatus.OK);
-
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
