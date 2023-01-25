@@ -31,6 +31,18 @@ public class ProductService {
         return productRepo.findById(productId).orElseThrow();
     }
 
+    public List<Product> getAllByBrand(String brandName)
+            throws NoSuchElementException {
+        Integer brandId = brandService.getByName(brandName).getId();
+        return productRepo.findByBrand_Id(brandId);
+    }
+
+    public List<Product> getAllByProductType(String productTypeName)
+            throws NoSuchElementException {
+        Integer productTypeId = productTypeService.getByName(productTypeName).getId();
+        return productRepo.findByType_Id(productTypeId);
+    }
+
     public Product add(ProductDto product)
             throws NoSuchElementException {
         Brand brand = brandService.getById(product.getBrandId());
