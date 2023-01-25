@@ -1,7 +1,6 @@
 package com.yuliavslv.shop.backend.controller;
 
 import com.yuliavslv.shop.backend.dto.AppError;
-import com.yuliavslv.shop.backend.dto.IdDto;
 import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.repo.BrandRepo;
@@ -54,11 +53,12 @@ public class BrandController {
     }
 
     //TODO: move processing DataIntegrityViolationException error to a separate method
-    @DeleteMapping
-    public ResponseEntity<?> deleteBrand(@RequestBody @Valid IdDto idDto) {
-        if (brandRepo.existsById(idDto.getId())) {
+    @DeleteMapping("/{brandName}")
+    public ResponseEntity<?> deleteBrand(@PathVariable("brandName") String brandName) {
+        try {
+            Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
             try {
-                brandRepo.deleteById(idDto.getId());
+                brandRepo.delete(brand);
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
             } catch (DataIntegrityViolationException e) {
                 String message = e.getCause().getCause().getMessage();
@@ -70,11 +70,11 @@ public class BrandController {
                         HttpStatus.CONFLICT
                 );
             }
-        } else {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Brand with given id does not exist"
+                            "Brand with given name does not exist"
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );

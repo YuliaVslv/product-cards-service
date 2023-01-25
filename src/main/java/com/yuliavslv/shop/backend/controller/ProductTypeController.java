@@ -1,7 +1,6 @@
 package com.yuliavslv.shop.backend.controller;
 
 import com.yuliavslv.shop.backend.dto.AppError;
-import com.yuliavslv.shop.backend.dto.IdDto;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
@@ -56,11 +55,12 @@ public class ProductTypeController {
     }
 
     //TODO: move processing DataIntegrityViolationException error to a separate method
-    @DeleteMapping
-    public ResponseEntity<?> deleteProductType(@RequestBody @Valid IdDto idDto) {
-        if (productTypeRepo.existsById(idDto.getId())) {
+    @DeleteMapping("/{typeName}")
+    public ResponseEntity<?> deleteProductType(@PathVariable("typeName") String typeName) {
+        try {
+            ProductType productType = productTypeRepo.findProductTypeByName(typeName).orElseThrow();
             try {
-                productTypeRepo.deleteById(idDto.getId());
+                productTypeRepo.delete(productType);
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
             } catch (DataIntegrityViolationException e) {
                 String message = e.getCause().getCause().getMessage();
@@ -72,11 +72,11 @@ public class ProductTypeController {
                         HttpStatus.CONFLICT
                 );
             }
-        } else {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Category with given id does not exist"
+                            "Category with given name does not exist"
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );

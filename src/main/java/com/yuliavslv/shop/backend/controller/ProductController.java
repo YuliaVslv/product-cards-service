@@ -1,7 +1,6 @@
 package com.yuliavslv.shop.backend.controller;
 
 import com.yuliavslv.shop.backend.dto.AppError;
-import com.yuliavslv.shop.backend.dto.IdDto;
 import com.yuliavslv.shop.backend.dto.ProductDto;
 import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
@@ -76,11 +75,11 @@ public class ProductController {
     }
 
     //TODO: move processing DataIntegrityViolationException error to a separate method
-    @DeleteMapping
-    public ResponseEntity<?> deleteProduct(@RequestBody @Valid IdDto idDto) {
-        if (productRepo.existsById(idDto.getId())) {
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable("productId") Integer productId) {
+        if (productRepo.existsById(productId)) {
             try {
-                productRepo.deleteById(idDto.getId());
+                productRepo.deleteById(productId);
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
             } catch (DataIntegrityViolationException e) {
                 String message = e.getCause().getCause().getMessage();
