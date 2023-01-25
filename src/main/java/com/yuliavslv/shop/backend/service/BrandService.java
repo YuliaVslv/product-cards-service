@@ -3,10 +3,12 @@ package com.yuliavslv.shop.backend.service;
 import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.repo.BrandRepo;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Service
 public class BrandService {
     private final BrandRepo brandRepo;
 
