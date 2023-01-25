@@ -1,5 +1,6 @@
 package com.yuliavslv.shop.backend.service;
 
+import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +19,11 @@ public class ProductTypeService {
 
     public List<ProductType> getAll() {
         return productTypeRepo.findAll();
+    }
+
+    public ProductType getById(Integer productTypeId)
+            throws NoSuchElementException {
+        return productTypeRepo.findById(productTypeId).orElseThrow();
     }
 
     public ProductType getByName(String productTypeName)

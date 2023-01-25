@@ -20,6 +20,11 @@ public class BrandService {
         return brandRepo.findAll();
     }
 
+    public Brand getById(Integer brandId)
+            throws NoSuchElementException {
+        return brandRepo.findById(brandId).orElseThrow();
+    }
+
     public Brand getByName(String brandName)
             throws NoSuchElementException {
         return brandRepo.findBrandByName(brandName).orElseThrow();
