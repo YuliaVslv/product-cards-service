@@ -3,8 +3,8 @@ package com.yuliavslv.shop.backend.controller;
 import com.yuliavslv.shop.backend.dto.AppError;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
-import com.yuliavslv.shop.backend.repo.ProductRepo;
-import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
+import com.yuliavslv.shop.backend.service.ProductService;
+import com.yuliavslv.shop.backend.service.ProductTypeService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +18,18 @@ import java.util.NoSuchElementException;
 @RequestMapping("/categories")
 public class ProductTypeController {
 
-    ProductTypeRepo productTypeRepo;
-    ProductRepo productRepo;
+    private final ProductTypeService productTypeService;
+    private final ProductService productService;
 
-    public ProductTypeController(ProductTypeRepo productTypeRepo, ProductRepo productRepo) {
-        this.productRepo = productRepo;
-        this.productTypeRepo = productTypeRepo;
+    public ProductTypeController(ProductTypeService productTypeService, ProductService productService) {
+        this.productTypeService = productTypeService;
+        this.productService = productService;
     }
 
-    @GetMapping("/{typeName}")
-    public ResponseEntity<?> getProductsInCategory(@PathVariable("typeName") String typeName) {
+    @GetMapping("/{categoryName}")
+    public ResponseEntity<?> getProductsInCategory(@PathVariable("categoryName") String productTypeName) {
         try {
-            ProductType productType = productTypeRepo.findProductTypeByName(typeName).orElseThrow();
-            List<Product> result = productRepo.findByType_Id(productType.getId());
+            List<Product> result = productService.getAllByProductType(productTypeName);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
@@ -44,25 +43,33 @@ public class ProductTypeController {
     }
 
     @GetMapping
-    public List<ProductType> getAllCategories() {
-        return productTypeRepo.findAll();
+    public ResponseEntity<?> getAll() {
+        List<ProductType> result = productTypeService.getAll();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> addBrand(@RequestBody @Valid ProductType productType) {
-        ProductType result = productTypeRepo.save(productType);
+    public ResponseEntity<?> add(@RequestBody @Valid ProductType productType) {
+        ProductType result = productTypeService.add(productType);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     //TODO: move processing DataIntegrityViolationException error to a separate method
-    @DeleteMapping("/{typeName}")
-    public ResponseEntity<?> deleteProductType(@PathVariable("typeName") String typeName) {
+    @DeleteMapping("/{categoryName}")
+    public ResponseEntity<?> delete(@PathVariable("categoryName") String productTypeName) {
         try {
-            ProductType productType = productTypeRepo.findProductTypeByName(typeName).orElseThrow();
-            try {
-                productTypeRepo.delete(productType);
-                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-            } catch (DataIntegrityViolationException e) {
+            productTypeService.delete(productTypeName);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+        catch (NoSuchElementException e) {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            "Category with given name does not exist"
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        } catch (DataIntegrityViolationException e) {
                 String message = e.getCause().getCause().getMessage();
                 return new ResponseEntity<>(
                         new AppError(
@@ -71,27 +78,14 @@ public class ProductTypeController {
                         ),
                         HttpStatus.CONFLICT
                 );
-            }
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Category with given name does not exist"
-                    ),
-                    HttpStatus.UNPROCESSABLE_ENTITY
-            );
         }
     }
 
-    @PutMapping("/{typeName}")
-    public ResponseEntity<?> changeCategory(@PathVariable("typeName") String typeName, @RequestBody ProductType changes) {
+    @PutMapping("/{categoryName}")
+    public ResponseEntity<?> change(@PathVariable("categoryName") String productTypeName, @RequestBody ProductType changes) {
         try {
-            ProductType productType = productTypeRepo.findProductTypeByName(typeName).orElseThrow();
-            if (changes.getName() != null) {
-                productType.setName(changes.getName());
-                productTypeRepo.save(productType);
-            }
-            return new ResponseEntity<>(productType, HttpStatus.OK);
+            ProductType result = productTypeService.change(productTypeName,changes);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
