@@ -55,7 +55,7 @@ public class ProductTypeController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    //TO DO: move processing DataIntegrityViolationException error to a separate method
+    //TODO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping
     public ResponseEntity<?> deleteProductType(@RequestBody @Valid IdDto idDto) {
         if (productTypeRepo.existsById(idDto.getId())) {
@@ -77,6 +77,26 @@ public class ProductTypeController {
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
                             "Category with given id does not exist"
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
+    }
+
+    @PutMapping("/{typeName}")
+    public ResponseEntity<?> changeCategory(@PathVariable("typeName") String typeName, @RequestBody ProductType changes) {
+        try {
+            ProductType productType = productTypeRepo.findProductTypeByName(typeName).orElseThrow();
+            if (changes.getName() != null) {
+                productType.setName(changes.getName());
+                productTypeRepo.save(productType);
+            }
+            return new ResponseEntity<>(productType, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            "Category with given name does not exist"
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );

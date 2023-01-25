@@ -75,7 +75,7 @@ public class ProductController {
         }
     }
 
-    //TO DO: move processing DataIntegrityViolationException error to a separate method
+    //TODO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping
     public ResponseEntity<?> deleteProduct(@RequestBody @Valid IdDto idDto) {
         if (productRepo.existsById(idDto.getId())) {
@@ -93,6 +93,61 @@ public class ProductController {
                 );
             }
         } else {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            "Product with given id does not exist"
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
+    }
+
+    @PutMapping("/{productId}")
+    public ResponseEntity<?> changeProduct(@PathVariable("productId") Integer productId, @RequestBody ProductDto changes) {
+        try {
+            Product product = productRepo.findById(productId).orElseThrow();
+            if (changes.getBrandId() != null) {
+                try {
+                    product.setBrand(brandRepo.findById(changes.getBrandId()).orElseThrow());
+                } catch (NoSuchElementException e) {
+                    return new ResponseEntity<>(
+                            new AppError(
+                                    HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                                    "Brand with given id does not exist"
+                            ),
+                            HttpStatus.UNPROCESSABLE_ENTITY
+                    );
+                }
+            }
+            if (changes.getTypeId() != null) {
+                try {
+                    product.setType(productTypeRepo.findById(changes.getTypeId()).orElseThrow());
+                } catch (NoSuchElementException e) {
+                    return new ResponseEntity<>(
+                            new AppError(
+                                    HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                                    "Category with given id does not exist"
+                            ),
+                            HttpStatus.UNPROCESSABLE_ENTITY
+                    );
+                }
+            }
+            if (changes.getName() != null) {
+                product.setName(changes.getName());
+            }
+            if (changes.getPrice() != null) {
+                product.setPrice(changes.getPrice());
+            }
+            if (changes.getSale() != null) {
+                product.setSale(changes.getSale());
+            }
+            if (changes.getAmount() != null) {
+                product.setAmount(changes.getAmount());
+            }
+            productRepo.save(product);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),

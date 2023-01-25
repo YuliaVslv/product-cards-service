@@ -53,7 +53,7 @@ public class BrandController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    //TO DO: move processing DataIntegrityViolationException error to a separate method
+    //TODO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping
     public ResponseEntity<?> deleteBrand(@RequestBody @Valid IdDto idDto) {
         if (brandRepo.existsById(idDto.getId())) {
@@ -79,5 +79,27 @@ public class BrandController {
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         }
+    }
+
+    @PutMapping("/{brandName}")
+    public ResponseEntity<?> changeBrand(@PathVariable("brandName") String brandName, @RequestBody Brand changes) {
+        try {
+            Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
+            if (changes.getName() != null) {
+                brand.setName(changes.getName());
+                brandRepo.save(brand);
+            }
+            return new ResponseEntity<>(brand, HttpStatus.OK);
+
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            "Brand with given name does not exist"
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
+
     }
 }
