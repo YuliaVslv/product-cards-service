@@ -5,6 +5,8 @@ import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +59,8 @@ public class ProductService {
         ));
     }
 
-    public void delete(Integer productId) {
+    public void delete(Integer productId)
+            throws EmptyResultDataAccessException, DataIntegrityViolationException {
         productRepo.deleteById(productId);
     }
 
