@@ -6,7 +6,6 @@ import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +29,8 @@ public class ProductService {
 
     public Product getById(Integer productId)
             throws NoSuchElementException {
-        return productRepo.findById(productId).orElseThrow();
+        return productRepo.findById(productId).
+                orElseThrow(()->new NoSuchElementException("Product with given id does not exist"));
     }
 
     public List<Product> getAllByBrand(String brandName)
@@ -60,8 +60,9 @@ public class ProductService {
     }
 
     public void delete(Integer productId)
-            throws EmptyResultDataAccessException, DataIntegrityViolationException {
-        productRepo.deleteById(productId);
+            throws NoSuchElementException, DataIntegrityViolationException {
+        Product product = getById(productId);
+        productRepo.delete(product);
     }
 
     public Product change(Integer productId, ProductDto changes)

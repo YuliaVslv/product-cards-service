@@ -22,12 +22,14 @@ public class BrandService {
 
     public Brand getById(Integer brandId)
             throws NoSuchElementException {
-        return brandRepo.findById(brandId).orElseThrow();
+        return brandRepo.findById(brandId).
+                orElseThrow(()->new NoSuchElementException("Brand with given id does not exist"));
     }
 
     public Brand getByName(String brandName)
             throws NoSuchElementException {
-        return brandRepo.findBrandByName(brandName).orElseThrow();
+        return brandRepo.findBrandByName(brandName).
+                orElseThrow(()->new NoSuchElementException("Brand with given name does not exist"));
     }
 
     public Brand add(Brand brand) {
@@ -36,13 +38,13 @@ public class BrandService {
 
     public void delete(String brandName)
             throws NoSuchElementException, DataIntegrityViolationException {
-        Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
+        Brand brand = getByName(brandName);
         brandRepo.delete(brand);
     }
 
     public Brand change(String brandName, Brand changes)
             throws NoSuchElementException {
-        Brand brand = brandRepo.findBrandByName(brandName).orElseThrow();
+        Brand brand = getByName(brandName);
         if (changes.getName() != null) {
             brand.setName(changes.getName());
             brandRepo.save(brand);

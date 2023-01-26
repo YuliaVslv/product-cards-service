@@ -35,7 +35,7 @@ public class ProductTypeController {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Category with given name does not exist"
+                            e.getMessage()
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
@@ -54,7 +54,6 @@ public class ProductTypeController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    //TODO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping("/{categoryName}")
     public ResponseEntity<?> delete(@PathVariable("categoryName") String productTypeName) {
         try {
@@ -65,16 +64,15 @@ public class ProductTypeController {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Category with given name does not exist"
+                            e.getMessage()
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         } catch (DataIntegrityViolationException e) {
-                String message = e.getCause().getCause().getMessage();
                 return new ResponseEntity<>(
                         new AppError(
                                 HttpStatus.CONFLICT.value(),
-                                message
+                                e.getCause().getMessage()
                         ),
                         HttpStatus.CONFLICT
                 );
@@ -90,7 +88,7 @@ public class ProductTypeController {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Category with given name does not exist"
+                            e.getMessage()
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );

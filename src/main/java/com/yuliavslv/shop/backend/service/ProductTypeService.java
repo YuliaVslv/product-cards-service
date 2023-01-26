@@ -1,6 +1,5 @@
 package com.yuliavslv.shop.backend.service;
 
-import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,12 +22,14 @@ public class ProductTypeService {
 
     public ProductType getById(Integer productTypeId)
             throws NoSuchElementException {
-        return productTypeRepo.findById(productTypeId).orElseThrow();
+        return productTypeRepo.findById(productTypeId).
+                orElseThrow(()->new NoSuchElementException("Category with given id does not exist"));
     }
 
     public ProductType getByName(String productTypeName)
             throws NoSuchElementException {
-        return productTypeRepo.findProductTypeByName(productTypeName).orElseThrow();
+        return productTypeRepo.findProductTypeByName(productTypeName).
+                orElseThrow(()->new NoSuchElementException("Category with given name does not exist"));
     }
 
     public ProductType add(ProductType productType) {
@@ -37,13 +38,13 @@ public class ProductTypeService {
 
     public void delete(String productTypeName)
             throws NoSuchElementException, DataIntegrityViolationException {
-        ProductType productType = productTypeRepo.findProductTypeByName(productTypeName).orElseThrow();
+        ProductType productType = getByName(productTypeName);
         productTypeRepo.delete(productType);
     }
 
     public ProductType change(String productTypeName, ProductType changes)
             throws NoSuchElementException {
-        ProductType productType = productTypeRepo.findProductTypeByName(productTypeName).orElseThrow();
+        ProductType productType = getByName(productTypeName);
         if (changes.getName() != null) {
             productType.setName(changes.getName());
             productTypeRepo.save(productType);

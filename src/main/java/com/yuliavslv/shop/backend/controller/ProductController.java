@@ -5,7 +5,6 @@ import com.yuliavslv.shop.backend.dto.ProductDto;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.service.ProductService;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +31,7 @@ public class ProductController {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Product with given id does not exist"
+                            e.getMessage()
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
@@ -53,31 +52,29 @@ public class ProductController {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "The brand or type of product with the given id was not found"),
+                            e.getMessage()),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
-    //TODO: move processing DataIntegrityViolationException error to a separate method
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> delete(@PathVariable("productId") Integer productId) {
         try {
             productService.delete(productId);
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Product with given id does not exist"
+                            e.getMessage()
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         } catch (DataIntegrityViolationException e) {
-            String message = e.getCause().getCause().getMessage();
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.CONFLICT.value(),
-                            message
+                            e.getCause().getMessage()
                     ),
                     HttpStatus.CONFLICT
             );
@@ -93,7 +90,7 @@ public class ProductController {
             return new ResponseEntity<>(
                     new AppError(
                             HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            "Changes cannot be made because a product, brand, or category with the given id does not exist."
+                            e.getMessage()
                     ),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
