@@ -88,4 +88,8 @@ public class ProductService {
         return productRepo.save(product);
     }
 
+    public List<Product> getDiscounts() {
+        return productRepo.findByDiscountIsGreaterThan(0);
+    }
+
 }

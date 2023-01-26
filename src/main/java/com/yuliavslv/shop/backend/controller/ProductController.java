@@ -99,4 +99,10 @@ public class ProductController {
             );
         }
     }
+
+    @GetMapping("/discounts")
+    public ResponseEntity<?> getDiscounts() {
+        List<Product> result = productService.getDiscounts();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
