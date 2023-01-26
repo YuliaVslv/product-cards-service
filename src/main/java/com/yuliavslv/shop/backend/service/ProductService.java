@@ -92,4 +92,25 @@ public class ProductService {
         return productRepo.findByDiscountIsGreaterThan(0);
     }
 
+    public Integer setDiscountForBrand(ProductDto changes)
+            throws IllegalArgumentException {
+        if (changes.getBrandId() == null) {
+            throw new IllegalArgumentException("brandId not specified");
+        }
+        if (changes.getDiscount() == null) {
+            throw new IllegalArgumentException("discount not specified");
+        }
+        return productRepo.updateDiscountForBrand(changes.getBrandId(), changes.getDiscount());
+    }
+
+    public Integer setDiscountForProductType(ProductDto changes)
+            throws IllegalArgumentException {
+        if (changes.getTypeId() == null) {
+            throw new IllegalArgumentException("typeId not specified");
+        }
+        if (changes.getDiscount() == null) {
+            throw new IllegalArgumentException("discount not specified");
+        }
+        return productRepo.updateDiscountForProductType(changes.getTypeId(), changes.getDiscount());
+    }
 }

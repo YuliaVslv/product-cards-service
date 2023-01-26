@@ -105,4 +105,36 @@ public class ProductController {
         List<Product> result = productService.getDiscounts();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PutMapping("/discounts/brand")
+    public ResponseEntity<?> setDiscountForBrand(@RequestBody ProductDto changes) {
+        try {
+            Integer result = productService.setDiscountForBrand(changes);
+            return new ResponseEntity<>("Changes made to " + result + " products", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            e.getMessage()
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
+    }
+
+    @PutMapping("/discounts/category")
+    public ResponseEntity<?> setDiscountForProductType(@RequestBody ProductDto changes) {
+        try {
+            Integer result = productService.setDiscountForProductType(changes);
+            return new ResponseEntity<>("Changes made to " + result + " products", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    new AppError(
+                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                            e.getMessage()
+                    ),
+                    HttpStatus.UNPROCESSABLE_ENTITY
+            );
+        }
+    }
 }
