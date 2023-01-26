@@ -54,7 +54,7 @@ public class ProductService {
                 product.getName(),
                 productType,
                 product.getPrice(),
-                product.getSale(),
+                product.getDiscount(),
                 product.getAmount()
         ));
     }
@@ -79,12 +79,13 @@ public class ProductService {
         if (changes.getPrice() != null) {
             product.setPrice(changes.getPrice());
         }
-        if (changes.getSale() != null) {
-            product.setSale(changes.getSale());
+        if (changes.getDiscount() != null) {
+            product.setDiscount(changes.getDiscount());
         }
         if (changes.getAmount() != null) {
             product.setAmount(changes.getAmount());
         }
         return productRepo.save(product);
     }
+
 }

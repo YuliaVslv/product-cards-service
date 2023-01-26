@@ -30,9 +30,9 @@ public class Product {
     @NotNull
     private Double price;
 
-    @Column(name = "sale")
+    @Column(name = "discount")
     @NotNull
-    private Integer sale;
+    private Integer discount;
 
     @Column(name = "amount")
     @NotNull
@@ -47,13 +47,13 @@ public class Product {
             String name,
             ProductType type,
             Double price,
-            Integer sale,
+            Integer discount,
             Integer amount) {
         this.brand = brand;
         this.name = name;
         this.type = type;
         this.price = price;
-        this.sale = sale;
+        this.discount = discount;
         this.amount = amount;
     }
 
@@ -97,12 +97,12 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getSale() {
-        return sale;
+    public Integer getDiscount() {
+        return discount;
     }
 
-    public void setSale(Integer sale) {
-        this.sale = sale;
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 
     public Integer getAmount() {

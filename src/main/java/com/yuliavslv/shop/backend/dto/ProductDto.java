@@ -11,11 +11,11 @@ public class ProductDto {
     private Integer typeId;
     @NotNull
     private Double price;
-    private Integer sale;
+    private Integer discount;
     private Integer amount;
 
     public ProductDto() {
-        sale = 0;
+        discount = 0;
         amount = 0;
     }
 
@@ -51,12 +51,10 @@ public class ProductDto {
         this.price = price;
     }
 
-    public Integer getSale() {
-        return sale;
-    }
+    public Integer getDiscount() { return discount; }
 
-    public void setSale(Integer sale) {
-        this.sale = sale;
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 
     public Integer getAmount() {
