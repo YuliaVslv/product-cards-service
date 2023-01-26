@@ -1,17 +1,13 @@
 package com.yuliavslv.shop.backend.controller;
 
-import com.yuliavslv.shop.backend.dto.AppError;
 import com.yuliavslv.shop.backend.dto.ProductDto;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.service.ProductService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/products")
@@ -22,116 +18,53 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{productId}")
-    public ResponseEntity<?> get(@PathVariable("productId") Integer productId) {
-        try {
-            Product result = productService.getById(productId);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            e.getMessage()
-                    ),
-                    HttpStatus.UNPROCESSABLE_ENTITY
-            );
-        }
+    public Product get(@PathVariable("productId") Integer productId) {
+            return productService.getById(productId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<Product> getAll() {
         return productService.getAll();
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody @Valid ProductDto product) {
-        try {
-            Product result = productService.add(product);
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            e.getMessage()),
-                    HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+    public Product add(@RequestBody @Valid ProductDto product) {
+        return productService.add(product);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> delete(@PathVariable("productId") Integer productId) {
-        try {
-            productService.delete(productId);
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            e.getMessage()
-                    ),
-                    HttpStatus.UNPROCESSABLE_ENTITY
-            );
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.CONFLICT.value(),
-                            e.getCause().getMessage()
-                    ),
-                    HttpStatus.CONFLICT
-            );
-        }
+    public void delete(@PathVariable("productId") Integer productId) {
+        productService.delete(productId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{productId}")
-    public ResponseEntity<?> change(@PathVariable("productId") Integer productId, @RequestBody ProductDto changes) {
-        try {
-            Product result = productService.change(productId, changes);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            e.getMessage()
-                    ),
-                    HttpStatus.UNPROCESSABLE_ENTITY
-            );
-        }
+    public Product change(@PathVariable("productId") Integer productId, @RequestBody ProductDto changes) {
+        return productService.change(productId, changes);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/discounts")
-    public ResponseEntity<?> getDiscounts() {
-        List<Product> result = productService.getDiscounts();
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public List<Product> getDiscounts() {
+        return productService.getDiscounts();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/discounts/brand")
-    public ResponseEntity<?> setDiscountForBrand(@RequestBody ProductDto changes) {
-        try {
-            Integer result = productService.setDiscountForBrand(changes);
-            return new ResponseEntity<>("Changes made to " + result + " products", HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            e.getMessage()
-                    ),
-                    HttpStatus.UNPROCESSABLE_ENTITY
-            );
-        }
+    public String setDiscountForBrand(@RequestBody ProductDto changes) {
+        Integer result = productService.setDiscountForBrand(changes);
+        return "Changes made to " + result + " products";
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/discounts/category")
-    public ResponseEntity<?> setDiscountForProductType(@RequestBody ProductDto changes) {
-        try {
-            Integer result = productService.setDiscountForProductType(changes);
-            return new ResponseEntity<>("Changes made to " + result + " products", HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(
-                    new AppError(
-                            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                            e.getMessage()
-                    ),
-                    HttpStatus.UNPROCESSABLE_ENTITY
-            );
-        }
+    public String setDiscountForProductType(@RequestBody ProductDto changes) {
+        Integer result = productService.setDiscountForProductType(changes);
+        return "Changes made to " + result + " products";
     }
 }
