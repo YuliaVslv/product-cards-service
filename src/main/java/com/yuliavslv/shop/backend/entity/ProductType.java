@@ -1,10 +1,17 @@
 package com.yuliavslv.shop.backend.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "product_type", schema = "shop")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProductType {
 
     @Id
@@ -16,26 +23,4 @@ public class ProductType {
     @NotNull
     private String name;
 
-    public ProductType() {
-    }
-
-    public ProductType(String name) {
-        this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

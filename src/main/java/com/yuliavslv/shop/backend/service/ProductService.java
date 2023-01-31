@@ -6,6 +6,7 @@ import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
 import com.yuliavslv.shop.backend.validator.ProductValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +14,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
     private final ProductRepo productRepo;
     private final BrandService brandService;
     private final ProductTypeService productTypeService;
-
     private final ProductValidator productValidator;
 
-    public ProductService(ProductRepo productRepo, BrandService brandService, ProductTypeService productTypeService, ProductValidator productValidator) {
-        this.productRepo = productRepo;
-        this.brandService = brandService;
-        this.productTypeService = productTypeService;
-        this.productValidator = productValidator;
-    }
 
     public List<Product> getAll() {
         return productRepo.findAll();

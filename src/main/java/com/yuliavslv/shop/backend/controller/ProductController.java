@@ -3,6 +3,7 @@ package com.yuliavslv.shop.backend.controller;
 import com.yuliavslv.shop.backend.dto.ProductDto;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{productId}")

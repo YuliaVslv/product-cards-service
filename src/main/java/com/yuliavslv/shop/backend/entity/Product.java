@@ -1,10 +1,17 @@
 package com.yuliavslv.shop.backend.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "product", schema = "shop")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -38,10 +45,6 @@ public class Product {
     @NotNull
     private Integer amount;
 
-    public Product() {
-
-    }
-
     public Product(
             Brand brand,
             String name,
@@ -54,62 +57,6 @@ public class Product {
         this.type = type;
         this.price = price;
         this.discount = discount;
-        this.amount = amount;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Brand getBrand() {
-        return brand;
-    }
-
-    public void setBrand(Brand brand) {
-        this.brand = brand;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ProductType getType() {
-        return type;
-    }
-
-    public void setType(ProductType type) {
-        this.type = type;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
-    }
-
-    public Integer getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 }

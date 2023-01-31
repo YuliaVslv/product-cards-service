@@ -4,6 +4,7 @@ import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.service.ProductService;
 import com.yuliavslv.shop.backend.service.ProductTypeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,15 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
+@RequiredArgsConstructor
 public class ProductTypeController {
 
     private final ProductTypeService productTypeService;
     private final ProductService productService;
-
-    public ProductTypeController(ProductTypeService productTypeService, ProductService productService) {
-        this.productTypeService = productTypeService;
-        this.productService = productService;
-    }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{categoryName}")

@@ -1,17 +1,14 @@
 package com.yuliavslv.shop.backend.validator;
 
 import com.yuliavslv.shop.backend.dto.ProductDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ProductValidator {
     private final BrandValidator brandValidator;
     private final ProductTypeValidator productTypeValidator;
-
-    public ProductValidator(BrandValidator brandValidator, ProductTypeValidator productTypeValidator) {
-        this.brandValidator = brandValidator;
-        this.productTypeValidator = productTypeValidator;
-    }
 
     public void validateProduct(ProductDto product)
             throws IllegalArgumentException {

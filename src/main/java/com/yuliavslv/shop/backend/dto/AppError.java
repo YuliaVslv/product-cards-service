@@ -1,16 +1,17 @@
 package com.yuliavslv.shop.backend.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppError {
     private Integer statusCode;
     private String message;
-
-    public AppError() {
-    }
-
-    public AppError(Integer statusCode, String message) {
-        this.statusCode = statusCode;
-        this.message = message;
-    }
 
     public Integer getStatusCode() {
         return statusCode;

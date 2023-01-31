@@ -4,6 +4,7 @@ import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.service.BrandService;
 import com.yuliavslv.shop.backend.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,14 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/brands")
+@RequiredArgsConstructor
 public class BrandController {
     private final BrandService brandService;
     private final ProductService productService;
-
-    public BrandController(BrandService brandService, ProductService productService) {
-        this.brandService = brandService;
-        this.productService = productService;
-    }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{brandName}")

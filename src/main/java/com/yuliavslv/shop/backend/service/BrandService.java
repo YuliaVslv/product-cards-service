@@ -3,21 +3,19 @@ package com.yuliavslv.shop.backend.service;
 import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.repo.BrandRepo;
 import com.yuliavslv.shop.backend.validator.BrandValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class BrandService {
     private final BrandRepo brandRepo;
     private final BrandValidator brandValidator;
-
-    public BrandService(BrandRepo brandRepo, BrandValidator brandValidator) {
-        this.brandRepo = brandRepo;
-        this.brandValidator = brandValidator;
-    }
 
     public List<Brand> getAll() {
         return brandRepo.findAll();

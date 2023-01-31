@@ -2,15 +2,13 @@ package com.yuliavslv.shop.backend.validator;
 
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ProductTypeValidator {
     private final ProductTypeRepo productTypeRepo;
-
-    public ProductTypeValidator(ProductTypeRepo productTypeRepo) {
-        this.productTypeRepo = productTypeRepo;
-    }
 
     public boolean isExistById(Integer id) {
         return productTypeRepo.existsById(id);

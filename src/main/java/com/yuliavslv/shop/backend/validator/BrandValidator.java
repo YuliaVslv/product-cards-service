@@ -2,15 +2,13 @@ package com.yuliavslv.shop.backend.validator;
 
 import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.repo.BrandRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class BrandValidator {
     private final BrandRepo brandRepo;
-
-    public BrandValidator(BrandRepo brandRepo) {
-        this.brandRepo = brandRepo;
-    }
 
     public boolean isExistById(Integer id) {
         return brandRepo.existsById(id);
