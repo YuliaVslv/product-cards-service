@@ -53,7 +53,7 @@ public class ProductTypeService {
         if (changes.getName() != null) {
             productTypeValidator.validateName(changes.getName());
             productType.setName(changes.getName());
-            productTypeRepo.save(productType);
+            productTypeRepo.updateProductTypeName(productType.getId(), changes.getName());
         }
         return productType;
     }

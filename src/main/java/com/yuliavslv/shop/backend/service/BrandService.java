@@ -52,7 +52,7 @@ public class BrandService {
         if (changes.getName() != null) {
             brandValidator.validateName(changes.getName());
             brand.setName(changes.getName());
-            brandRepo.save(brand);
+            brandRepo.updateBrandName(brand.getId(), changes.getName());
         }
         return brand;
     }
