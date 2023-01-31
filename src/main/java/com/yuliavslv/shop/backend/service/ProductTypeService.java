@@ -2,6 +2,7 @@ package com.yuliavslv.shop.backend.service;
 
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductTypeRepo;
+import com.yuliavslv.shop.backend.validator.ProductTypeValidator;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,11 @@ import java.util.NoSuchElementException;
 public class ProductTypeService {
     private final ProductTypeRepo productTypeRepo;
 
-    public ProductTypeService(ProductTypeRepo productTypeRepo) {
+    private final ProductTypeValidator productTypeValidator;
+
+    public ProductTypeService(ProductTypeRepo productTypeRepo, ProductTypeValidator productTypeValidator) {
         this.productTypeRepo = productTypeRepo;
+        this.productTypeValidator = productTypeValidator;
     }
 
     public List<ProductType> getAll() {
@@ -33,6 +37,7 @@ public class ProductTypeService {
     }
 
     public ProductType add(ProductType productType) {
+        productTypeValidator.validateProductType(productType);
         return productTypeRepo.save(productType);
     }
 
@@ -43,9 +48,10 @@ public class ProductTypeService {
     }
 
     public ProductType change(String productTypeName, ProductType changes)
-            throws NoSuchElementException {
+            throws NoSuchElementException, IllegalArgumentException {
         ProductType productType = getByName(productTypeName);
         if (changes.getName() != null) {
+            productTypeValidator.validateName(changes.getName());
             productType.setName(changes.getName());
             productTypeRepo.save(productType);
         }

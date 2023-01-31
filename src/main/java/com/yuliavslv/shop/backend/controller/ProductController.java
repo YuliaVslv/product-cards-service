@@ -6,7 +6,6 @@ import com.yuliavslv.shop.backend.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +31,7 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Product add(@RequestBody @Valid ProductDto product) {
+    public Product add(@RequestBody ProductDto product) {
         return productService.add(product);
     }
 

@@ -5,6 +5,7 @@ import com.yuliavslv.shop.backend.entity.Brand;
 import com.yuliavslv.shop.backend.entity.Product;
 import com.yuliavslv.shop.backend.entity.ProductType;
 import com.yuliavslv.shop.backend.repo.ProductRepo;
+import com.yuliavslv.shop.backend.validator.ProductValidator;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,13 @@ public class ProductService {
     private final BrandService brandService;
     private final ProductTypeService productTypeService;
 
-    public ProductService(ProductRepo productRepo, BrandService brandService, ProductTypeService productTypeService) {
+    private final ProductValidator productValidator;
+
+    public ProductService(ProductRepo productRepo, BrandService brandService, ProductTypeService productTypeService, ProductValidator productValidator) {
         this.productRepo = productRepo;
         this.brandService = brandService;
         this.productTypeService = productTypeService;
+        this.productValidator = productValidator;
     }
 
     public List<Product> getAll() {
@@ -46,9 +50,10 @@ public class ProductService {
     }
 
     public Product add(ProductDto product)
-            throws NoSuchElementException {
+            throws NoSuchElementException, IllegalArgumentException {
         Brand brand = brandService.getById(product.getBrandId());
         ProductType productType = productTypeService.getById(product.getTypeId());
+        productValidator.validateProduct(product);
         return productRepo.save(new Product(
                 brand,
                 product.getName(),
@@ -66,7 +71,7 @@ public class ProductService {
     }
 
     public Product change(Integer productId, ProductDto changes)
-            throws NoSuchElementException {
+            throws NoSuchElementException, IllegalArgumentException {
         Product product = productRepo.findById(productId).orElseThrow();
         if (changes.getBrandId() != null) {
             product.setBrand(brandService.getById(changes.getBrandId()));
@@ -74,16 +79,20 @@ public class ProductService {
         if (changes.getTypeId() != null) {
             product.setType(productTypeService.getById(changes.getTypeId()));
         }
-        if (changes.getName() != null) {
+        if (changes.getName() != null ) {
+            productValidator.validateName(changes.getName());
             product.setName(changes.getName());
         }
         if (changes.getPrice() != null) {
+            productValidator.validatePrice(changes.getPrice());
             product.setPrice(changes.getPrice());
         }
         if (changes.getDiscount() != null) {
+            productValidator.validateDiscount(changes.getDiscount());
             product.setDiscount(changes.getDiscount());
         }
         if (changes.getAmount() != null) {
+            productValidator.validateAmount(changes.getAmount());
             product.setAmount(changes.getAmount());
         }
         return productRepo.save(product);
@@ -96,9 +105,11 @@ public class ProductService {
     public Integer setDiscountForBrand(ProductDto changes)
             throws IllegalArgumentException {
         if (changes.getBrandId() == null) {
+            productValidator.validateBrandId(changes.getBrandId());
             throw new IllegalArgumentException("brandId not specified");
         }
         if (changes.getDiscount() == null) {
+            productValidator.validateDiscount(changes.getDiscount());
             throw new IllegalArgumentException("discount not specified");
         }
         return productRepo.updateDiscountForBrand(changes.getBrandId(), changes.getDiscount());
@@ -107,9 +118,11 @@ public class ProductService {
     public Integer setDiscountForProductType(ProductDto changes)
             throws IllegalArgumentException {
         if (changes.getTypeId() == null) {
+            productValidator.validateProductTypeId(changes.getTypeId());
             throw new IllegalArgumentException("typeId not specified");
         }
         if (changes.getDiscount() == null) {
+            productValidator.validateDiscount(changes.getDiscount());
             throw new IllegalArgumentException("discount not specified");
         }
         return productRepo.updateDiscountForProductType(changes.getTypeId(), changes.getDiscount());
