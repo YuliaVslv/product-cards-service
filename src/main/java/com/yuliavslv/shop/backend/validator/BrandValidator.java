@@ -29,7 +29,7 @@ public class BrandValidator {
         if (name.length() > 255) {
             throw new IllegalArgumentException("Brand name must be less than 255 characters long");
         }
-        if (!brandRepo.existsBrandByName(name)) {
+        if (brandRepo.existsBrandByName(name)) {
             throw new IllegalArgumentException("A brand with this name already exists");
         }
     }

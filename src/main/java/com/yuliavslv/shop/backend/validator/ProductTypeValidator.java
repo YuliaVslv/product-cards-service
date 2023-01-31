@@ -29,7 +29,7 @@ public class ProductTypeValidator {
         if (name.length() > 255) {
             throw new IllegalArgumentException("Category name must be less than 255 characters long");
         }
-        if (!productTypeRepo.existsProductTypeByName(name)) {
+        if (productTypeRepo.existsProductTypeByName(name)) {
             throw new IllegalArgumentException("A category with this name already exists");
         }
     }
