@@ -11,12 +11,12 @@ public class ProductDto {
     private Integer typeId;
     @NotNull
     private Double price;
+    @NotNull
     private Integer discount;
+    @NotNull
     private Integer amount;
 
     public ProductDto() {
-        discount = 0;
-        amount = 0;
     }
 
     public Integer getBrandId() {
