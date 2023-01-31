@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 
 @Service
 @RequiredArgsConstructor
 public class BrandService {
     private final BrandRepo brandRepo;
     private final BrandValidator brandValidator;
+    private final Properties properties;
 
     public List<Brand> getAll() {
         return brandRepo.findAll();
@@ -23,13 +25,13 @@ public class BrandService {
     public Brand getById(Integer brandId)
             throws NoSuchElementException {
         return brandRepo.findById(brandId).
-                orElseThrow(()->new NoSuchElementException("Brand with given id does not exist"));
+                orElseThrow(()->new NoSuchElementException(properties.getProperty("brand.id.notExist")));
     }
 
     public Brand getByName(String brandName)
             throws NoSuchElementException {
         return brandRepo.findBrandByName(brandName).
-                orElseThrow(()->new NoSuchElementException("Brand with given name does not exist"));
+                orElseThrow(()->new NoSuchElementException(properties.getProperty("brand.name.notExist")));
     }
 
     public Brand add(Brand brand) {

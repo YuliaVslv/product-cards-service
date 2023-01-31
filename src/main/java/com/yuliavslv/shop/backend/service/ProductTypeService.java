@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 
 @Service
 @RequiredArgsConstructor
 public class ProductTypeService {
     private final ProductTypeRepo productTypeRepo;
     private final ProductTypeValidator productTypeValidator;
+    private final Properties properties;
 
     public List<ProductType> getAll() {
         return productTypeRepo.findAll();
@@ -23,13 +25,13 @@ public class ProductTypeService {
     public ProductType getById(Integer productTypeId)
             throws NoSuchElementException {
         return productTypeRepo.findById(productTypeId).
-                orElseThrow(()->new NoSuchElementException("Category with given id does not exist"));
+                orElseThrow(()->new NoSuchElementException(properties.getProperty("productType.id.notExist")));
     }
 
     public ProductType getByName(String productTypeName)
             throws NoSuchElementException {
         return productTypeRepo.findProductTypeByName(productTypeName).
-                orElseThrow(()->new NoSuchElementException("Category with given name does not exist"));
+                orElseThrow(()->new NoSuchElementException(properties.getProperty("productType.name.notExist")));
     }
 
     public ProductType add(ProductType productType) {

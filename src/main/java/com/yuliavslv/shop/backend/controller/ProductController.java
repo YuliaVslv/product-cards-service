@@ -8,12 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final Properties properties;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{productId}")
@@ -55,13 +57,13 @@ public class ProductController {
     @PutMapping("/discounts/brand")
     public String setDiscountForBrand(@RequestBody ProductDto changes) {
         Integer result = productService.setDiscountForBrand(changes);
-        return "Changes made to " + result + " products";
+        return properties.getProperty("product.update") + result;
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/discounts/category")
     public String setDiscountForProductType(@RequestBody ProductDto changes) {
         Integer result = productService.setDiscountForProductType(changes);
-        return "Changes made to " + result + " products";
+        return properties.getProperty("product.update") + result;
     }
 }

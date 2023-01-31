@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class ProductService {
     private final BrandService brandService;
     private final ProductTypeService productTypeService;
     private final ProductValidator productValidator;
+    private final Properties properties;
 
 
     public List<Product> getAll() {
@@ -29,7 +31,7 @@ public class ProductService {
     public Product getById(Integer productId)
             throws NoSuchElementException {
         return productRepo.findById(productId).
-                orElseThrow(()->new NoSuchElementException("Product with given id does not exist"));
+                orElseThrow(()->new NoSuchElementException(properties.getProperty("product.id.notExist")));
     }
 
     public List<Product> getAllByBrand(String brandName)
@@ -101,11 +103,11 @@ public class ProductService {
             throws IllegalArgumentException {
         if (changes.getBrandId() == null) {
             productValidator.validateBrandId(changes.getBrandId());
-            throw new IllegalArgumentException("brandId not specified");
+            throw new IllegalArgumentException(properties.getProperty("product.brandId.notSpecified"));
         }
         if (changes.getDiscount() == null) {
             productValidator.validateDiscount(changes.getDiscount());
-            throw new IllegalArgumentException("discount not specified");
+            throw new IllegalArgumentException(properties.getProperty("product.discount.notSpecified"));
         }
         return productRepo.updateDiscountForBrand(changes.getBrandId(), changes.getDiscount());
     }
@@ -114,11 +116,11 @@ public class ProductService {
             throws IllegalArgumentException {
         if (changes.getTypeId() == null) {
             productValidator.validateProductTypeId(changes.getTypeId());
-            throw new IllegalArgumentException("typeId not specified");
+            throw new IllegalArgumentException(properties.getProperty("product.typeId.notSpecified"));
         }
         if (changes.getDiscount() == null) {
             productValidator.validateDiscount(changes.getDiscount());
-            throw new IllegalArgumentException("discount not specified");
+            throw new IllegalArgumentException(properties.getProperty("product.discount.notSpecified"));
         }
         return productRepo.updateDiscountForProductType(changes.getTypeId(), changes.getDiscount());
     }
