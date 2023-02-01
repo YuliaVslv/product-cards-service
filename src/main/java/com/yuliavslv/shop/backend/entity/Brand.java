@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "brand", schema = "shop")
+@Table(name = "brand", schema = "product_cards")
 @Getter
 @Setter
 @NoArgsConstructor
