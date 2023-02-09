@@ -22,4 +22,9 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
     @Modifying
     @Query("UPDATE Product p SET p.discount = :discount WHERE p.type.id = :productTypeId")
     Integer updateDiscountForProductType(Integer productTypeId, Integer discount);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Product p SET p.discount = :discount WHERE p.brand.id = :brandId AND p.type.id = :productTypeId")
+    Integer updateDiscountForBrandAndProductType(Integer brandId, Integer productTypeId, Integer discount);
 }

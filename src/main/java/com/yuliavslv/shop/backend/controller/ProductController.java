@@ -54,16 +54,9 @@ public class ProductController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/discounts/brand")
+    @PutMapping("/discounts")
     public String setDiscountForBrand(@RequestBody ProductDto changes) {
-        Integer result = productService.setDiscountForBrand(changes);
-        return properties.getProperty("product.update") + result;
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/discounts/category")
-    public String setDiscountForProductType(@RequestBody ProductDto changes) {
-        Integer result = productService.setDiscountForProductType(changes);
+        Integer result = productService.setDiscount(changes);
         return properties.getProperty("product.update") + result;
     }
 }

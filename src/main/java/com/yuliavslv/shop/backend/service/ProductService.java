@@ -99,29 +99,31 @@ public class ProductService {
         return productRepo.findByDiscountIsGreaterThan(0);
     }
 
-    public Integer setDiscountForBrand(ProductDto changes)
+    public Integer setDiscount(ProductDto changes)
             throws IllegalArgumentException {
-        if (changes.getBrandId() == null) {
+        boolean forBrand = false, forType = false;
+        if (changes.getBrandId() != null) {
             productValidator.validateBrandId(changes.getBrandId());
-            throw new IllegalArgumentException(properties.getProperty("product.brandId.notSpecified"));
+            forBrand = true;
         }
-        if (changes.getDiscount() == null) {
-            productValidator.validateDiscount(changes.getDiscount());
-            throw new IllegalArgumentException(properties.getProperty("product.discount.notSpecified"));
-        }
-        return productRepo.updateDiscountForBrand(changes.getBrandId(), changes.getDiscount());
-    }
-
-    public Integer setDiscountForProductType(ProductDto changes)
-            throws IllegalArgumentException {
-        if (changes.getTypeId() == null) {
+        if (changes.getTypeId() != null) {
             productValidator.validateProductTypeId(changes.getTypeId());
-            throw new IllegalArgumentException(properties.getProperty("product.typeId.notSpecified"));
+            forType = true;
         }
         if (changes.getDiscount() == null) {
-            productValidator.validateDiscount(changes.getDiscount());
             throw new IllegalArgumentException(properties.getProperty("product.discount.notSpecified"));
+        } else {
+            productValidator.validateDiscount(changes.getDiscount());
         }
-        return productRepo.updateDiscountForProductType(changes.getTypeId(), changes.getDiscount());
+        if (forBrand && forType) {
+            return productRepo.updateDiscountForBrandAndProductType(changes.getBrandId(), changes.getTypeId(), changes.getDiscount());
+        } else if (forBrand) {
+            return productRepo.updateDiscountForBrand(changes.getBrandId(), changes.getDiscount());
+        } else if (forType) {
+            return productRepo.updateDiscountForProductType(changes.getTypeId(), changes.getDiscount());
+        } else {
+            return 0;
+        }
+
     }
 }
