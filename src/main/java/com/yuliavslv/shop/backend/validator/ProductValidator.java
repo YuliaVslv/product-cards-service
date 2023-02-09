@@ -23,6 +23,9 @@ public class ProductValidator {
 
     public void validateBrandId(Integer id)
             throws IllegalArgumentException {
+        if (id == null) {
+            throw new IllegalArgumentException(properties.getProperty("product.brandId.notSpecified"));
+        }
         if (!brandValidator.isExistById(id)) {
             throw new IllegalArgumentException(properties.getProperty("brand.id.notExist"));
         }
@@ -30,6 +33,9 @@ public class ProductValidator {
 
     public void validateProductTypeId(Integer id)
             throws IllegalArgumentException {
+        if (id == null) {
+            throw new IllegalArgumentException(properties.getProperty("product.typeId.notSpecified"));
+        }
         if (!productTypeValidator.isExistById(id)) {
             throw new IllegalArgumentException(properties.getProperty("productType.id.notExist"));
         }
@@ -47,6 +53,9 @@ public class ProductValidator {
 
     public void validatePrice(Double price)
             throws IllegalArgumentException {
+        if (price == null) {
+            throw new IllegalArgumentException(properties.getProperty("product.price.notSpecified"));
+        }
         if (price < 0) {
             throw new IllegalArgumentException(properties.getProperty("product.price.negative"));
         }
@@ -54,6 +63,9 @@ public class ProductValidator {
 
     public void validateDiscount(Integer discount)
             throws IllegalArgumentException {
+        if (discount == null) {
+            throw new IllegalArgumentException(properties.getProperty("product.discount.notSpecified"));
+        }
         if (discount < 0 || discount > 100) {
             throw new IllegalArgumentException(properties.getProperty("product.discount.outOfRange"));
         }
@@ -61,6 +73,9 @@ public class ProductValidator {
 
     public void validateAmount(Integer amount)
             throws IllegalArgumentException {
+        if (amount == null) {
+            throw new IllegalArgumentException(properties.getProperty("product.amount.notSpecified"));
+        }
         if (amount < 0) {
             throw new IllegalArgumentException(properties.getProperty("product.amount.negative"));
         }
