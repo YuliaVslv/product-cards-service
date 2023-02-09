@@ -24,7 +24,7 @@ public class ProductValidator {
     public void validateBrandId(Integer id)
             throws IllegalArgumentException {
         if (!brandValidator.isExistById(id)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(properties.getProperty("brand.id.notExist"));
         }
     }
 
