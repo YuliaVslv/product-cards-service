@@ -102,6 +102,7 @@ public class ProductService {
     public Integer setDiscount(ProductDto changes)
             throws IllegalArgumentException {
         boolean forBrand = false, forType = false;
+        productValidator.validateDiscount(changes.getDiscount());
         if (changes.getBrandId() != null) {
             productValidator.validateBrandId(changes.getBrandId());
             forBrand = true;
@@ -110,11 +111,7 @@ public class ProductService {
             productValidator.validateProductTypeId(changes.getTypeId());
             forType = true;
         }
-        if (changes.getDiscount() == null) {
-            throw new IllegalArgumentException(properties.getProperty("product.discount.notSpecified"));
-        } else {
-            productValidator.validateDiscount(changes.getDiscount());
-        }
+
         if (forBrand && forType) {
             return productRepo.updateDiscountForBrandAndProductType(changes.getBrandId(), changes.getTypeId(), changes.getDiscount());
         } else if (forBrand) {
