@@ -69,7 +69,7 @@ public class ProductService {
 
     public Product change(Integer productId, ProductDto changes)
             throws NoSuchElementException, IllegalArgumentException {
-        Product product = productRepo.findById(productId).orElseThrow();
+        Product product = getById(productId);
         if (changes.getBrandId() != null) {
             product.setBrand(brandService.getById(changes.getBrandId()));
         }
