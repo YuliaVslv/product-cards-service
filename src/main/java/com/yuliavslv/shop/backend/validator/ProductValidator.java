@@ -4,6 +4,7 @@ import com.yuliavslv.shop.backend.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 @Component
@@ -22,22 +23,22 @@ public class ProductValidator {
     }
 
     public void validateBrandId(Integer id)
-            throws IllegalArgumentException {
+            throws IllegalArgumentException, NoSuchElementException {
         if (id == null) {
             throw new IllegalArgumentException(properties.getProperty("product.brandId.notSpecified"));
         }
         if (!brandValidator.isExistById(id)) {
-            throw new IllegalArgumentException(properties.getProperty("brand.id.notExist"));
+            throw new NoSuchElementException(properties.getProperty("brand.id.notExist"));
         }
     }
 
     public void validateProductTypeId(Integer id)
-            throws IllegalArgumentException {
+            throws IllegalArgumentException, NoSuchElementException {
         if (id == null) {
             throw new IllegalArgumentException(properties.getProperty("product.typeId.notSpecified"));
         }
         if (!productTypeValidator.isExistById(id)) {
-            throw new IllegalArgumentException(properties.getProperty("productType.id.notExist"));
+            throw new NoSuchElementException(properties.getProperty("productType.id.notExist"));
         }
     }
 
