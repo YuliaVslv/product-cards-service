@@ -1,5 +1,6 @@
 package com.yuliavslv.shop.backend.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductDto {
     @NotNull
     private Integer brandId;
@@ -22,4 +24,6 @@ public class ProductDto {
     private Integer discount;
     @NotNull
     private Integer amount;
+
+
 }
